@@ -2,6 +2,7 @@ use std::{error::Error, fs};
 
 use clap::Parser;
 use merkle_tree::{MerkleTreeProofNode, MerkleeTree};
+use reqwest::header::CONTENT_TYPE;
 use serde::{Deserialize, Serialize};
 
 #[derive(Parser, Debug)]
@@ -45,10 +46,11 @@ pub fn validate(file_path: &str, args: ValidateArgs) -> Result<(), Box<dyn Error
     let res: ValidationResponse = reqwest::blocking::Client::new()
         .post(format!("{}/gift", args.host))
         .body(serde_json::to_string(&request_body)?)
+        .header(CONTENT_TYPE, "application/json")
         .send()?
         .json()?;
 
-    println!("Validation result: {}", res.result);
+    println!("Validation result: {:#?}", res.result);
 
     Ok(())
 }
