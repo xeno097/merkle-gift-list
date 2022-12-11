@@ -51,8 +51,10 @@ async fn gift(config: Data<Config>, data: Json<GiftValidationRequest>) -> impl R
 pub async fn run_server() -> std::io::Result<()> {
     let config = Config::new();
 
+    let port = config.port;
+
     HttpServer::new(move || App::new().app_data(Data::new(config.clone())).service(gift))
-        .bind(("127.0.0.1", 3000))?
+        .bind(("127.0.0.1", port))?
         .run()
         .await
 }
