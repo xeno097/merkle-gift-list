@@ -1,14 +1,12 @@
-use actix_web::{post, App, HttpResponse, HttpServer, Responder};
+use std::env;
 
-#[post("/gift")]
-async fn gift() -> impl Responder {
-    HttpResponse::Ok()
-}
+use server::{config::Config, server::run_server};
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    HttpServer::new(|| App::new().service(gift))
-        .bind(("127.0.0.1", 8080))?
-        .run()
-        .await
+    let env_args: Vec<String> = env::args().collect();
+
+    let app_config = Config::new(&env_args);
+
+    run_server(app_config).await
 }
