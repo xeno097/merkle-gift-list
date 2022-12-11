@@ -4,7 +4,7 @@ use clap::Parser;
 
 use crate::{
     get_root::{get_root, GetRootArgs},
-    validate::ValidateArgs,
+    validate::{validate, ValidateArgs},
 };
 
 #[derive(Parser)]
@@ -31,6 +31,6 @@ pub fn run_cli() -> Result<(), Box<dyn Error>> {
 
     match args.subcommand {
         Commands::GetRoot(_) => get_root(&args.file),
-        Commands::Validate(_) => todo!(),
+        Commands::Validate(validate_args) => validate(&args.file, validate_args),
     }
 }
