@@ -48,7 +48,9 @@ async fn gift(config: Data<Config>, data: Json<GiftValidationRequest>) -> impl R
     GiftValidationResponse { result }
 }
 
-pub async fn run_server(config: Config) -> std::io::Result<()> {
+pub async fn run_server() -> std::io::Result<()> {
+    let config = Config::new();
+
     HttpServer::new(move || App::new().app_data(Data::new(config.clone())).service(gift))
         .bind(("127.0.0.1", 3000))?
         .run()
