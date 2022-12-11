@@ -27,7 +27,7 @@ pub fn merge(left: impl AsRef<[u8]>, right: impl AsRef<[u8]>) -> String {
 }
 
 #[derive(Serialize, Deserialize)]
-pub struct MerkleeTreeProofNode {
+pub struct MerkleTreeProofNode {
     data: String,
     is_left: bool,
 }
@@ -71,13 +71,13 @@ impl MerkleeTree {
         MerkleeTree::build_root(&new_level)
     }
 
-    pub fn get_proof(&self, idx: usize) -> Vec<MerkleeTreeProofNode> {
+    pub fn get_proof(&self, idx: usize) -> Vec<MerkleTreeProofNode> {
         let hashed_leaves: Vec<String> = self.leaves.iter().map(keccak256).collect();
 
         MerkleeTree::build_proof(idx, &hashed_leaves)
     }
 
-    fn build_proof(idx: usize, level: &[String]) -> Vec<MerkleeTreeProofNode> {
+    fn build_proof(idx: usize, level: &[String]) -> Vec<MerkleTreeProofNode> {
         let level_size = level.len();
         let mut partial_proof = Vec::new();
 
@@ -99,7 +99,7 @@ impl MerkleeTree {
                 if counter == idx || counter == idx.saturating_sub(1) {
                     let is_target_at_left = idx % 2 == 0;
 
-                    let curr_proof_node = MerkleeTreeProofNode {
+                    let curr_proof_node = MerkleTreeProofNode {
                         data: if is_target_at_left {
                             right.clone()
                         } else {
@@ -122,7 +122,7 @@ impl MerkleeTree {
     }
 }
 
-pub fn validate(value: String, root: String, proof: Vec<MerkleeTreeProofNode>) -> bool {
+pub fn validate(value: String, root: String, proof: Vec<MerkleTreeProofNode>) -> bool {
     let candidate_root = proof.iter().fold(keccak256(value), |acc, proof_node| {
         if proof_node.is_left {
             merge(&proof_node.data, acc)
