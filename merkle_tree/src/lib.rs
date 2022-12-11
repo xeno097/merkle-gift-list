@@ -26,7 +26,7 @@ pub fn merge(left: impl AsRef<[u8]>, right: impl AsRef<[u8]>) -> String {
     hex::encode(hash)
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct MerkleTreeProofNode {
     data: String,
     is_left: bool,
@@ -122,7 +122,7 @@ impl MerkleeTree {
     }
 }
 
-pub fn validate(value: String, root: String, proof: Vec<MerkleTreeProofNode>) -> bool {
+pub fn validate(value: String, root: String, proof: &[MerkleTreeProofNode]) -> bool {
     let candidate_root = proof.iter().fold(keccak256(value), |acc, proof_node| {
         if proof_node.is_left {
             merge(&proof_node.data, acc)
